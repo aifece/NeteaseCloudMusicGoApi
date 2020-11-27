@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
 func (m *MusicObain) CheckMusic(query map[string]interface{}) map[string]interface{} {

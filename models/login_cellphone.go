@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/crypto"
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/crypto"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
 func (m *MusicObain) LoginCellphone(query map[string]interface{}) map[string]interface{} {

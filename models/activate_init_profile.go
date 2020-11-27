@@ -1,6 +1,6 @@
 package models
 
-import "github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+import "github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 
 func (m *MusicObain) ActivateInitProfile(query map[string]interface{}) map[string]interface{} {
 	data := map[string]interface{}{

@@ -8,11 +8,11 @@ import (
 	"net/url"
 	"reflect"
 	"strings"
-	"time"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/models"
-	"github.com/gin-contrib/cache"
-	"github.com/gin-contrib/cache/persistence"
+	"NeteaseCloudMusicGoApi/models"
+
+	_ "github.com/gin-contrib/cache"
+	_ "github.com/gin-contrib/cache/persistence"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,7 +21,7 @@ var ModelPath = "./models"
 func InitRouter() *gin.Engine {
 	//gin.SetMode(gin.ReleaseMode)
 	var musicObain models.MusicObain
-	store := persistence.NewInMemoryStore(time.Second)
+	// store := persistence.NewInMemoryStore(time.Second)
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
@@ -38,7 +38,7 @@ func InitRouter() *gin.Engine {
 			filename = strings.TrimSuffix(filename, ".go")
 			path := fmt.Sprintf("/%v", strings.ReplaceAll(filename, "_", "/"))
 			method := strings.ReplaceAll(strings.Title(strings.ReplaceAll(filename, "_", " ")), " ", "")
-			r.Any(path, cache.CachePage(store, 2*time.Minute, func(context *gin.Context) {
+			r.GET(path, func(context *gin.Context) {
 				query := map[string]interface{}{}
 				data, _ := ioutil.ReadAll(context.Request.Body)
 				_ = json.Unmarshal(data, &query)
@@ -54,10 +54,19 @@ func InitRouter() *gin.Engine {
 				for _, val := range resp["cookie"].([]string) {
 					context.Writer.Header().Add("Set-Cookie", val)
 				}
-				context.JSON(200, resp)
-			}))
+				body, ok := resp["body"].(map[string]interface{})
+				if ok {
+					context.JSON(200, body)
+				} else {
+					context.JSON(200, map[string]interface{}{
+						"code": 500,
+						"data": map[string]interface{}{},
+					})
+				}
+			})
 		}
 	}
+
 	return r
 }
 
@@ -93,7 +102,7 @@ func CookieParseMiddleware(context *gin.Context, queryRaw interface{}) {
 
 func main() {
 	routersInit := InitRouter()
-	if err := routersInit.Run(":8080"); err == nil {
+	if err := routersInit.Run(":10998"); err == nil {
 		log.Printf("[info] start http server listening %s\n")
 	} else {
 		log.Fatal("[Error]", err)

@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/crypto"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/crypto"
 	"github.com/willf/pad"
 )
 

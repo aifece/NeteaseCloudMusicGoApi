@@ -1,11 +1,20 @@
 package models
 
 import (
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	"fmt"
+
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
-func (m *MusicObain) DjBanner(query map[string]interface{}) map[string]interface{} {
-	data := map[string]interface{}{}
+func (m *MusicObain) Lyric(query map[string]interface{}) map[string]interface{} {
+	data := map[string]interface{}{
+		"lv": -1,
+		"kv": -1,
+		"tv": -1,
+	}
+	if val, ok := query["id"]; ok {
+		data["id"] = val
+	}
 	if val, ok := query["cookie"]; ok {
 		valMapper := val.(map[string]interface{})
 		valMapper["os"] = "pc"
@@ -15,14 +24,14 @@ func (m *MusicObain) DjBanner(query map[string]interface{}) map[string]interface
 			"os": "pc",
 		}
 	}
+	fmt.Println(data)
 	options := map[string]interface{}{
-		"crypto": "weapi",
+		"crypto": "linuxapi",
 		"cookie": query["cookie"],
 		"proxy":  query["proxy"],
 	}
-
 	return request.CreateRequest(
-		"POST", "http://music.163.com/weapi/djradio/banner/get",
+		"POST", "https://music.163.com/api/song/lyric",
 		data,
 		options)
 }

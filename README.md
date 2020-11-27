@@ -4,10 +4,13 @@ go版本网易云音乐api
 ## 移植自
 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
 感谢Binaryify大佬
-## 使用
 
+## Fork自
+https://github.com/Jackkakaya/NeteaseCloudMusicGoApi
+
+## 使用
 ```
-$ git clone https://github.com/Jackkakaya/NeteaseCloudMusicGoApi
+$ git clone https://github.com/aifece/NeteaseCloudMusicGoApi
 $ cd NeteaseCloudMusicGoApi
 $ go mod download
 $ go run app.gp

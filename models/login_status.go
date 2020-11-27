@@ -3,8 +3,8 @@ package models
 import (
 	"regexp"
 
-	neteasePkg "github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg"
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	neteasePkg "github.com/aifece/NeteaseCloudMusicGoApi/pkg"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
 func (m *MusicObain) LoginStatus(query map[string]interface{}) map[string]interface{} {
