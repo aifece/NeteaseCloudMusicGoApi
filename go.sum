@@ -1,5 +1,3 @@
-github.com/Jackkakaya/NeteaseCloudMusicGoApi v0.0.0-20200319075800-ba2613e2f74e h1:nF7i70EJ6XOW6k+C7OnDwDy1Rp+iy3BYDqJuGpqGcr0=
-github.com/Jackkakaya/NeteaseCloudMusicGoApi v0.0.0-20200319075800-ba2613e2f74e/go.mod h1:x03acll3vDh1PASaL1ZJKSRwC9AJF7057m214+spbL0=
 github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737 h1:rRISKWyXfVxvoa702s91Zl5oREZTrR3yv+tXrrX7G/g=
 github.com/bradfitz/gomemcache v0.0.0-20180710155616-bc664df96737/go.mod h1:PmM6Mmwb0LSuEubjR8N7PtNe1KxZLtOUHtbeikc5h60=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

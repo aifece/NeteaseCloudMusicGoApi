@@ -102,7 +102,7 @@ func CookieParseMiddleware(context *gin.Context, queryRaw interface{}) {
 
 func main() {
 	routersInit := InitRouter()
-	if err := routersInit.Run(":10998"); err == nil {
+	if err := routersInit.Run(":10997"); err == nil {
 		log.Printf("[info] start http server listening %s\n")
 	} else {
 		log.Fatal("[Error]", err)
