@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
 func (m *MusicObain) CommentMv(query map[string]interface{}) map[string]interface{} {
