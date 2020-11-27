@@ -3,7 +3,7 @@ package models
 import (
 	"fmt"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
 func (m *MusicObain) SongUrl(query map[string]interface{}) map[string]interface{} {
@@ -22,7 +22,7 @@ func (m *MusicObain) SongUrl(query map[string]interface{}) map[string]interface{
 	}
 
 	return request.CreateRequest(
-        "POST", "https://interface3.music.163.com/eapi/song/enhance/player/url",
-        data,
-        options)
+		"POST", "https://interface3.music.163.com/eapi/song/enhance/player/url",
+		data,
+		options)
 }

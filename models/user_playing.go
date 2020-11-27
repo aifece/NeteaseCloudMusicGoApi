@@ -1,18 +1,18 @@
 package models
 
 import (
-	"fmt"
-	"time"
-	"sync"
 	"errors"
+	"fmt"
+	"sync"
+	"time"
 
-	"github.com/Jackkakaya/NeteaseCloudMusicGoApi/pkg/request"
+	"github.com/aifece/NeteaseCloudMusicGoApi/pkg/request"
 )
 
 func (m *MusicObain) UserPlaying(query map[string]interface{}) map[string]interface{} {
-    result, _ := getUserPlayList(query)
+	result, _ := getUserPlayList(query)
 
-    answer := map[string]interface{}{
+	answer := map[string]interface{}{
 		"status": 200,
 		"body": map[string]interface{}{
 			"code": 200,
@@ -21,11 +21,12 @@ func (m *MusicObain) UserPlaying(query map[string]interface{}) map[string]interf
 		"cookie": []string{},
 	}
 
-    return answer
+	return answer
 }
 
 var cacheMap map[string][]interface{}
 var cacheResultMap map[string]interface{}
+
 func setResultList(uid string) {
 	record_list, ok := cacheMap[uid]
 	if ok {
@@ -38,8 +39,8 @@ func setResultList(uid string) {
 		result_list := make(map[int]interface{})
 		is_change := false
 		for ; i > 0; i-- {
-			prev_list, has_prev_list := record_list[i - 1].(map[int]interface{})
-			for id, v := range new_list {				
+			prev_list, has_prev_list := record_list[i-1].(map[int]interface{})
+			for id, v := range new_list {
 				new_item := v.(map[string]interface{})
 				new_index := new_item["index"].(int)
 				score := 100 - new_index
@@ -64,7 +65,7 @@ func setResultList(uid string) {
 				if ok {
 					prev_index := prev_item["index"].(int)
 					if new_index < prev_index {
-						score = score + (prev_index - new_index) * 128
+						score = score + (prev_index-new_index)*128
 						is_change = true
 						tmp_change = true
 					}
@@ -75,19 +76,19 @@ func setResultList(uid string) {
 				}
 				if tmp_change {
 					result_item["score"] = score
-					result_list[id] = result_item	
+					result_list[id] = result_item
 				}
 			}
 		}
-		now  := time.Now()
-		check_time := fmt.Sprintf("%d-%d-%d %d:%d:%d",now.Year(),now.Month(),now.Day(),now.Hour(),now.Minute(),now.Second())
+		now := time.Now()
+		check_time := fmt.Sprintf("%d-%d-%d %d:%d:%d", now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())
 		_, has_record := cacheResultMap[uid]
 		var change_list []map[string]interface{}
 		change_item := map[string]interface{}{
 			"change_time": check_time,
-			"changes": getSortResult(result_list),
+			"changes":     getSortResult(result_list),
 		}
-		if (has_record) {
+		if has_record {
 			user_result := cacheResultMap[uid].(map[string]interface{})
 			change_list = user_result["result"].([]map[string]interface{})
 		} else {
@@ -105,15 +106,15 @@ func setResultList(uid string) {
 			}
 			change_list = append(change_list[min:max], change_item)
 			cacheResultMap[uid] = map[string]interface{}{
-				"is_change": is_change,
+				"is_change":  is_change,
 				"check_time": check_time,
-				"result": change_list,
+				"result":     change_list,
 			}
 		} else {
 			cacheResultMap[uid] = map[string]interface{}{
-				"is_change": is_change,
+				"is_change":  is_change,
 				"check_time": check_time,
-				"result": change_list,
+				"result":     change_list,
 			}
 		}
 	}
@@ -207,8 +208,8 @@ func timeout(query map[string]interface{}) {
 	for {
 		wg.Add(1)
 		select {
-			case <-tick.C:
-				go runGetList(&wg, query)
+		case <-tick.C:
+			go runGetList(&wg, query)
 		}
 	}
 }
@@ -216,25 +217,25 @@ func timeout(query map[string]interface{}) {
 func getRecordList(query map[string]interface{}) map[int]interface{} {
 	list := map[int]interface{}{}
 	request_data := map[string]interface{}{
-        "type": 1,
-        "limit": 10,
-        "showCount": false,
-    }
-    uid := ""
-    if val, ok := query["uid"]; ok {
-    	uid = val.(string)
+		"type":      1,
+		"limit":     10,
+		"showCount": false,
+	}
+	uid := ""
+	if val, ok := query["uid"]; ok {
+		uid = val.(string)
 	}
 	request_data["uid"] = uid
 
-    options := map[string]interface{}{
-        "crypto": "weapi",
-        "cookie": query["cookie"],
-        "proxy":  query["proxy"],
-    }
+	options := map[string]interface{}{
+		"crypto": "weapi",
+		"cookie": query["cookie"],
+		"proxy":  query["proxy"],
+	}
 	resp := request.CreateRequest(
-        "POST", "https://music.163.com/weapi/v1/play/record",
-        request_data,
-        options)
+		"POST", "https://music.163.com/weapi/v1/play/record",
+		request_data,
+		options)
 	body, body_ok := resp["body"].(map[string]interface{})
 	if !body_ok {
 		return list
@@ -251,10 +252,10 @@ func getRecordList(query map[string]interface{}) map[int]interface{} {
 		id := int(song["id"].(float64))
 		source_id := int(song_al["id"].(float64))
 		list[id] = map[string]interface{}{
-			"id": id,
+			"id":        id,
 			"source_id": source_id,
-			"index": i,
-			"name": song["name"].(string),
+			"index":     i,
+			"name":      song["name"].(string),
 		}
 	}
 
