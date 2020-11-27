@@ -9,7 +9,7 @@ import (
 	"reflect"
 	"strings"
 
-	"NeteaseCloudMusicGoApi/models"
+	"github.com/aifece/NeteaseCloudMusicGoApi/models"
 
 	_ "github.com/gin-contrib/cache"
 	_ "github.com/gin-contrib/cache/persistence"
