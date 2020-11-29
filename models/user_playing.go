@@ -60,12 +60,11 @@ func setResultList(uid string) {
 					continue
 				}
 
-				prev_item, ok := prev_list[id].(map[string]interface{})
 				tmp_change := false
-				if ok {
-					prev_index := prev_item["index"].(int)
+				if prev_item, ok := prev_list[id].(map[string]interface{}); ok {
+					prev_index, _ := prev_item["index"].(int)
 					if new_index < prev_index {
-						score = score + (prev_index-new_index)*128
+						score = score + (prev_index - new_index) * 128
 						is_change = true
 						tmp_change = true
 					}
@@ -153,8 +152,6 @@ func getSortResult(list map[int]interface{}) []map[string]interface{} {
 func getUserPlayList(query map[string]interface{}) (map[string]interface{}, error) {
 	if val, ok := query["uid"]; ok {
 		query["uid"] = val
-	} else {
-		query["uid"] = "16747342"
 	}
 	if cacheMap == nil {
 		cacheMap = make(map[string][]interface{})
@@ -162,13 +159,20 @@ func getUserPlayList(query map[string]interface{}) (map[string]interface{}, erro
 	if cacheResultMap == nil {
 		cacheResultMap = make(map[string]interface{})
 	}
+	if userPlayingCookie == nil {
+		userPlayingCookie = make(map[string]interface{})
+	}
+	if val, ok := query["cookie"]; ok {
+		userPlayingCookie = val.(map[string]interface{})
+	}
 	uid := string(query["uid"].(string))
 	_, ok := cacheMap[uid]
 	if !ok {
 		go timeout(query)
 		var wg = sync.WaitGroup{}
+		stopChan := make(chan bool, 1)
 		wg.Add(1)
-		go runGetList(&wg, query)
+		go runGetList(stopChan, &wg, query)
 		wg.Wait()
 	}
 	_, second_ok := cacheMap[uid]
@@ -183,12 +187,18 @@ func getUserPlayList(query map[string]interface{}) (map[string]interface{}, erro
 	}
 }
 
-func runGetList(wg *sync.WaitGroup, query map[string]interface{}) {
+func runGetList(stopChan chan bool, wg *sync.WaitGroup, query map[string]interface{}) {
 	defer wg.Done()
 
-	item := getRecordList(query)
 	uid := string(query["uid"].(string))
+	item := getRecordList(query)
 	old_list, ok := cacheMap[uid]
+	if len(item) == 0 && !ok {
+		stopChan <- true
+		fmt.Println("Run Playing Error:", uid)
+		return
+	}
+
 	if ok {
 		old_list = old_list[1:]
 	} else {
@@ -205,20 +215,31 @@ func timeout(query map[string]interface{}) {
 	fmt.Println("Run Query Job")
 	tick := time.NewTicker(1 * time.Second)
 	var wg = sync.WaitGroup{}
+	stopChan := make(chan bool, 1)
 	for {
 		wg.Add(1)
 		select {
 		case <-tick.C:
-			go runGetList(&wg, query)
+			go runGetList(stopChan, &wg, query)
+		case <-stopChan:
+			goto END
 		}
 	}
+	tick.Stop()
+END:
 }
 
+var userPlayingCookie map[string]interface{}
 func getRecordList(query map[string]interface{}) map[int]interface{} {
+	defer func() {
+        if r := recover(); r != nil {
+            fmt.Printf("Play Recode Error：%s\n", r)
+        }
+    }()
 	list := map[int]interface{}{}
 	request_data := map[string]interface{}{
 		"type":      1,
-		"limit":     10,
+		"limit":     100,
 		"showCount": false,
 	}
 	uid := ""
@@ -229,7 +250,7 @@ func getRecordList(query map[string]interface{}) map[int]interface{} {
 
 	options := map[string]interface{}{
 		"crypto": "weapi",
-		"cookie": query["cookie"],
+		"cookie": userPlayingCookie,
 		"proxy":  query["proxy"],
 	}
 	resp := request.CreateRequest(
@@ -239,6 +260,10 @@ func getRecordList(query map[string]interface{}) map[int]interface{} {
 	body, body_ok := resp["body"].(map[string]interface{})
 	if !body_ok {
 		return list
+	}
+	cookie, cookie_ok := resp["cookie"].(map[string]interface{})
+	if cookie_ok {
+		userPlayingCookie = cookie
 	}
 	weekData, data_ok := body["weekData"].([]interface{})
 	if !data_ok {

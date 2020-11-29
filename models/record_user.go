@@ -13,8 +13,6 @@ func (m *MusicObain) RecordUser(query map[string]interface{}) map[string]interfa
 	}
 	if val, ok := query["uid"]; ok {
 		data["uid"] = val
-	} else {
-		data["uid"] = 0
 	}
 	options := map[string]interface{}{
 		"crypto": "weapi",
