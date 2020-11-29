@@ -30,7 +30,6 @@ func (m *MusicObain) SongDetail(query map[string]interface{}) map[string]interfa
 		data["c"] = string(str_c)
 		data["ids"] = string(str_ids)
 	}
-	fmt.Println(data)
 	options := map[string]interface{}{
 		"crypto": "weapi",
 		"cookie": query["cookie"],

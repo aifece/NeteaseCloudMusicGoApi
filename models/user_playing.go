@@ -212,7 +212,7 @@ func runGetList(stopChan chan bool, wg *sync.WaitGroup, query map[string]interfa
 
 func timeout(query map[string]interface{}) {
 	fmt.Println("Run Query Job")
-	tick := time.NewTicker(1 * time.Second)
+	tick := time.NewTicker(30 * time.Second)
 	var wg = sync.WaitGroup{}
 	stopChan := make(chan bool, 1)
 	for {
