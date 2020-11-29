@@ -81,14 +81,13 @@ func setResultList(uid string) {
 		}
 		now := time.Now()
 		check_time := fmt.Sprintf("%d-%d-%d %d:%d:%d", now.Year(), now.Month(), now.Day(), now.Hour(), now.Minute(), now.Second())
-		_, has_record := cacheResultMap[uid]
+		user_result, has_record := cacheResultMap[uid].(map[string]interface{})
 		var change_list []map[string]interface{}
 		change_item := map[string]interface{}{
 			"change_time": check_time,
 			"changes":     getSortResult(result_list),
 		}
 		if has_record {
-			user_result := cacheResultMap[uid].(map[string]interface{})
 			change_list = user_result["result"].([]map[string]interface{})
 		} else {
 			change_list = make([]map[string]interface{}, 0)
